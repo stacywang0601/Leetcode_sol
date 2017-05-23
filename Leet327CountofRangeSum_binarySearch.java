@@ -13,7 +13,9 @@ public  int countRangeSum(int[] nums, int lower, int upper) {
 			//target with lessOrEqual ----> target + 1 with less
 			int right = less(helper, 0, helper.size() - 1, sum - lower + 1);
 			res += right - left;
-			int index = greater(helper, 0, helper.size() - 1, sum);
+			int index = less(helper, 0, helper.size() - 1, sum);
+			//greater-->less  so need to check index and add 1
+			index = index == -1 ? 0 : index + 1;
 			helper.add(index, sum);
 		}
 		return res;
@@ -34,19 +36,4 @@ public  int countRangeSum(int[] nums, int lower, int upper) {
 		}
 		return -1;
 	}
-   
-	/*find the min index that greater than the target**/
-	private  int greater(ArrayList<Long> helper, int l, int h, long k) {
-		while (l <= h) {
-			int m = (l + h) / 2;
-			if (helper.get(m) <= k) {
-				l = m + 1;
-			} else {
-				h = m - 1;
-			}
-		}
-		return l;
-	}
-
-
 }
