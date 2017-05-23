@@ -23,10 +23,10 @@ public  int countRangeSum(int[] nums, int lower, int upper) {
 	private  int less(ArrayList<Long> helper, int l, int h, long k) {
 		while (l < h) {
 			int m = (l + h + 1) / 2;
-			if (helper.get(m) >= k) {
-				h = m - 1;
-			} else {
+			if (helper.get(m) < k) {
 				l = m;
+			} else {
+				h = m - 1;
 			}
 		}
 		if (helper.get(l) < k) {
