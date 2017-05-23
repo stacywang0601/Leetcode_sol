@@ -21,7 +21,7 @@ public class Leet378KthSmallestElementinaSortedMatrix {
 			public int kthSmallest(int[][] matrix, int k) {
 						int n = matrix.length;
 						int l = matrix[0][0], h = matrix[n - 1][n - 1];
-						while (l <= h) {
+						while (l < h) {
 									int m = l + (h - l) / 2;
 									int count = 0, j = n - 1;
 
@@ -34,10 +34,10 @@ public class Leet378KthSmallestElementinaSortedMatrix {
 												count += j + 1;
 									}
 									// compare with k
-									if (count < k) {
-												l = m + 1;
+									if (count >= k) {
+												h = m;
 									} else {
-												h = m - 1;
+												l = m + 1;
 									}
 						}
 						return l;
