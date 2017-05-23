@@ -21,13 +21,14 @@ public class Leet003LongestSubstringWithoutRepeatingCharacters {
 						return 0;
 				HashMap<Character, Integer> map = new HashMap<Character, Integer>();
 				int max = 0;
-				for (int i = 0, j = 0; j < s.length(); j++) {
-						if (map.containsKey(s.charAt(j))) {
-								// if repeated char is before i, then dont update
-								i = Math.max(map.get(s.charAt(j)) + 1, i);
-						}
-						map.put(s.charAt(j), j);
-						max = Math.max(max, j - i + 1);
+				int start = 0;
+        for(int i=0; i < s.length(); i++) {
+            if(map.containsKey(s.charAt(i))) {
+                //if repeated char is before start, then dont update
+                start = Math.max(map.get(s.charAt(i)) + 1, start);
+            }
+            map.put(s.charAt(i), i);
+            max = Math.max(max,i - start + 1);
 				}
 				return max;
 		}
