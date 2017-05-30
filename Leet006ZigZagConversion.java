@@ -14,40 +14,35 @@ package B05_29;
  * convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR".
  **/
 public class Leet006ZigZagConversion {
-	/** 首行和尾行是＋step，中间行有两个step交替进行，画图找规律 */
+	/**
+	 * StringBuilder[]
+	 * vertically down : row = [0, numRows]
+	 * vertically down : row = [numRows-2, 1]
+	 * copy ss[1]~ss[numRows-1] to ss[0]
+	 **/
 	public String convert(String s, int numRows) {
-		if (numRows == 1) {
-			return s;
-		}
-		int step = 2 * numRows - 2;
-		StringBuilder ss = new StringBuilder();
+		int len = s.length();
+		char[] c = s.toCharArray();
+		StringBuilder[] ss = new StringBuilder[numRows];
 
-		for (int i = 0; i < numRows; i++) {
-			/** first and last row **/
-			if (i == 0 || i == numRows - 1) {
-				for (int j = i; j < s.length(); j += step) {
-					ss.append(s.charAt(j));
-				}
-			} else {
-				/** middle rows */
-				int j = i;
-				// 负责交替
-				boolean flag = true;
-				int step1 = 2 * (numRows - i - 1);
-				int step2 = step - step1;
-				while (j < s.length()) {
-					// 写在前面，因为第一个j也要进入
-					ss.append(s.charAt(j));
-					if (flag) {
-						j += step1;
-					} else {
-						j += step2;
-					}
-					flag = !flag;
-				}
+		for (int i = 0; i < ss.length; i++)
+			ss[i] = new StringBuilder();
+
+		int i = 0;
+		while (i < len) {
+			for (int row = 0; row < numRows && i < len; row++) {
+				ss[row].append(c[i++]);
+			}
+			for (int row = numRows - 2; row >= 1 && i < len; row--) {
+				ss[row].append(c[i++]);
 			}
 		}
-		return ss.toString();
+
+		for (int row = 1; row < numRows; row++) {
+			ss[0].append(ss[row]);
+		}
+		return ss[0].toString();
+
 	}
 
 }
