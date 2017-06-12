@@ -1,5 +1,6 @@
 package B05_26;
 
+// @Author : Stacy Wang
 /**
  * Given n non-negative integers representing an elevation map where the width of each bar is 1,
  * compute how much water it is able to trap after raining.
@@ -39,42 +40,34 @@ public class Leet042TrappingRainWater {
 	}
 
 	/**
-	 * Method2: 2 pointers
-	 * Time: O(n), Space:O(1)
-	 * if(leftmax<rightmax) then, at least (leftmax-A[a]) water can definitely be stored no matter
-	 * what happens between [a,b] since there is a barrier at the rightside
-	 * */
-
-	public int trap2(int[] A) {
-		int n = A.length;
-		int left = 0;
-		int right = n - 1;
-		int res = 0;
-		int maxleft = 0, maxright = 0;
-		while (left <= right) {
-			if (A[left] <= A[right]) {
-				// increasing : update max
-				if (A[left] >= maxleft)
-					maxleft = A[left];
-				else
-					// decreasing add to res
-					res += maxleft - A[left];
-				left++;
-			} else {
-				if (A[right] >= maxright)
-					maxright = A[right];
-				else
-					res += maxright - A[right];
-				right--;
-			}
+	 * Update:simiular to candy problem
+	 * Date :2017-06-12
+	 * remove max variable,update left[i] based on left[i-1],right[i] based on right[i+1]
+	 */
+	public int trap2(int[] height) {
+		int len = height.length;
+		int[] left = new int[len];
+		int[] right = new int[len];
+		if (height == null || height.length == 0) {
+			return 0;
 		}
-		return res;
 
-	}
+		left[0] = height[0];
+		for (int i = 1; i < len; i++) {
+			left[i] = Math.max(height[i], left[i - 1]);
+		}
 
-	public static void main(String[] args) {
-		int[] A = { 2, 0, 2 };
-		System.out.print(trap(A));
+		right[len - 1] = height[len - 1];
+		for (int i = len - 2; i >= 0; i--) {
+			right[i] = Math.max(height[i], right[i + 1]);
+		}
+
+		int total = 0;
+		for (int i = 0; i < len; i++) {
+			int temp = Math.min(left[i], right[i]) - height[i];
+			total += temp;
+		}
+		return total;
 
 	}
 
