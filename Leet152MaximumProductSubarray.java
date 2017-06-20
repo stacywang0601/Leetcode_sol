@@ -13,14 +13,18 @@ public class Leet152MaximumProductSubarray {
 			 * as A[i]!!! since this is product, a negative * negative could be positive.
 			 */
 			public int maxProduct(int[] nums) {
+						//from nums[0], not Integer.MIN_VALUE
 						int maxPro = nums[0];
 						int minPro = nums[0];
 						int max = nums[0];
-
+						
+						//from 1
 						for (int i = 1; i < nums.length; i++) {
+									//save maxPro
 									int temp = maxPro;
 									maxPro = Math.max(Math.max(maxPro * nums[i], minPro * nums[i]), nums[i]);
 									minPro = Math.min(Math.min(temp * nums[i], minPro * nums[i]), nums[i]);
+									//so far!
 									max = Math.max(max, maxPro);
 						}
 						return max;
