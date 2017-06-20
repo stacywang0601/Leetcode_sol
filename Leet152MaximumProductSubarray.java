@@ -22,6 +22,8 @@ public class Leet152MaximumProductSubarray {
 						for (int i = 1; i < nums.length; i++) {
 									//save maxPro
 									int temp = maxPro;
+									//need to compare with nums[i] to update to nums[i] when nums[i-1] =0
+									//eg {1,0,9,2} after num[1] maxPro = minPro =0;
 									maxPro = Math.max(Math.max(maxPro * nums[i], minPro * nums[i]), nums[i]);
 									minPro = Math.min(Math.min(temp * nums[i], minPro * nums[i]), nums[i]);
 									//so far!
