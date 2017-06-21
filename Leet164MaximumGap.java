@@ -65,4 +65,51 @@ public class Leet164MaximumGap {
 		maxGap = Math.max(maxGap, max - previous); // updata the final max value gap
 		return maxGap;
 	}
+
+	/** Method2:use Bucket object */
+	class Bucket {
+		int		max		= Integer.MIN_VALUE;
+		int		min		= Integer.MAX_VALUE;
+		boolean	isUsed	= false;
+	}
+
+	public int maximumGap2(int[] num) {
+		if (num == null || num.length < 2)
+			return 0;
+		// get the max and min value of the array
+		int min = num[0];
+		int max = num[0];
+		int len = num.length;
+		for (int i : num) {
+			min = Math.min(min, i);
+			max = Math.max(max, i);
+		}
+		int gap = (int) Math.ceil((double) (max - min) / (len - 1));
+		Bucket[] bucket = new Bucket[len - 1];
+		for (int i = 0; i < len - 1; i++) {
+			bucket[i] = new Bucket();
+		}
+
+		for (int i = 0; i < len; i++) {
+			if (num[i] == min || num[i] == max) {
+				continue;
+			}
+			int idx = (num[i] - min) / gap;
+			bucket[idx].min = Math.min(bucket[idx].min, num[i]);
+			bucket[idx].max = Math.max(bucket[idx].max, num[i]);
+			bucket[idx].isUsed = true;
+		}
+		int pre = min;
+		int res = 0;
+		for (int i = 0; i < len - 1; i++) {
+			if (bucket[i].isUsed == false) {
+				continue;
+			}
+			res = Math.max(res, bucket[i].min - pre);
+			pre = bucket[i].max;
+		}
+		// final
+		res = res = Math.max(res, max - pre);
+		return res;
+	}
 }
