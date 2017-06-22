@@ -28,12 +28,16 @@ public class Leet129SumRoottoLeafNumbers {
 		return sum(root, 0);
 	}
 
-	public int sum(TreeNode n, int s) {
+	public int sum(TreeNode n, int cur) {
+		// final stop
 		if (n == null)
 			return 0;
+		cur = cur * 10 + n.val;
+		// final return
 		if (n.right == null && n.left == null)
-			return s * 10 + n.val;
-		return sum(n.left, s * 10 + n.val) + sum(n.right, s * 10 + n.val);
+			return cur;
+		// recursive
+		return sum(n.left, cur) + sum(n.right, cur);
 	}
 
 }
