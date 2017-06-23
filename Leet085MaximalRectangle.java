@@ -36,6 +36,7 @@ public class Leet085MaximalRectangle {
 		int max = 0;
 
 		for (int row = 0; row < rLen; row++) {
+			// stack for each row
 			Stack<Integer> s = new Stack<Integer>();
 			for (int i = 0; i < cLen + 1; i++) {
 				if (i < cLen) {
@@ -58,6 +59,40 @@ public class Leet085MaximalRectangle {
 			}
 		}
 		return max;
+	}
 
+	public int maximalRectangle2(char[][] matrix) {
+		if (matrix == null || matrix.length == 0 || matrix[0].length == 0)
+			return 0;
+		int cLen = matrix[0].length;
+		int rLen = matrix.length;
+		int[] h = new int[cLen + 1];
+		h[cLen] = 0;
+		int max = 0;
+
+		for (int row = 0; row < rLen; row++) {
+			Stack<Integer> s = new Stack<Integer>();
+			// no need check empty later
+			s.push(-1);
+			for (int i = 0; i < cLen + 1; i++) {
+				if (i < cLen) {
+					if (matrix[row][i] == '1')
+						h[i] += 1;
+					else
+						h[i] = 0;
+
+				}
+				// size() >1 instead of empty
+				while (s.size() > 1 && h[i] <= h[s.peek()]) {
+					int height = h[s.pop()];
+					// (i - s.peek() - 1) for all cases
+					int area = height * (i - s.peek() - 1);
+					max = Math.max(max, area);
+				}
+				s.push(i);
+
+			}
+		}
+		return max;
 	}
 }
