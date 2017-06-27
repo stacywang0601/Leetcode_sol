@@ -26,9 +26,12 @@ package B06_27;
  * Notice that a/aa/aaa/file1.txt is not the longest file path, if there is another path
  * aaaaaaaaaaaaaaaaaaaaa/sth.png.
  */
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 public class Leet388LongestAbsoluteFilePath {
+	/** stack store cur len, pop to get parent len */
 	public int lengthLongestPath(String input) {
 		Stack<Integer> stack = new Stack<>();
 		stack.push(0); // "dummy" length
@@ -38,12 +41,30 @@ public class Leet388LongestAbsoluteFilePath {
 			int lev = s.lastIndexOf("\t") + 1; // number of "\t
 			while (stack.size() > lev + 1)
 				stack.pop(); // find parent
-			int len = stack.peek() + s.length() - lev + 1; // remove "\t", add"/"
-			stack.push(len);
+			int len = stack.peek() + s.length() - lev; // remove "\t"
+			stack.push(len + 1);// add"/"
 			// check if it is file
 			if (s.contains("."))
-				maxLen = Math.max(maxLen, len - 1);// remove "/"
+				maxLen = Math.max(maxLen, len);
 		}
 		return maxLen;
+	}
+
+	/** map to store level and len */
+	public int lengthLongestPath2(String input) {
+		int res = 0;
+		Map<Integer, Integer> m = new HashMap<>();
+		m.put(0, 0);
+		for (String s : input.split("\n")) {
+			int level = s.lastIndexOf("\t") + 1;
+			int len = s.length() - level;
+			if (s.contains(".")) {
+				res = Math.max(res, m.get(level) + len);
+			} else {
+				// put for next level
+				m.put(level + 1, m.get(level) + len + 1);
+			}
+		}
+		return res;
 	}
 }
