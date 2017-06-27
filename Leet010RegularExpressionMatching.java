@@ -19,18 +19,20 @@ package B06_02;
  */
 public class Leet010RegularExpressionMatching {
 	/**
-	 * 1. If p.charAt(j) == s.charAt(i) : dp[i][j] = dp[i-1][j-1];
-	 * 2. If p.charAt(j) == '.' : dp[i][j] = dp[i-1][j-1];
+	 * dp[i+1][j+1] means if s[0...i] match p[0...j]
+	 * 
+	 * 1. If p.charAt(j) == s.charAt(i) : dp[i+1][j+1] = dp[i][j];
+	 * 2. If p.charAt(j) == '.' : dp[i+1][j+1] = dp[i][j];
 	 * 
 	 * 3. If p.charAt(j) == '*':
 	 * here are two sub conditions:
-	 * 3-1. if p.charAt(j-1) != s.charAt(i) :
-	 * dp[i][j] = dp[i][j-2] //in this case, a* only counts as empty
+	 * 3-1. if p.charAt(j-1) != s.charAt(i) && p.charAt(j-1) != '.'
+	 * dp[i+1][j+1] = dp[i+1][j-1] //in this case, a* only counts as empty
 	 * 
-	 * 3-2. if p.charAt(j-1) == s.charAt(i) or p.charAt(j-1) == '.':
-	 * dp[i][j] = dp[i-1][j] //in this case, a* counts as multiple a !!!!
-	 * dp[i][j] = dp[i][j-1] // in this case, a* counts as single a
-	 * dp[i][j] = dp[i][j-2] // in this case, a* counts as empty
+	 * 3-2. if p.charAt(j-1) == s.charAt(i) || p.charAt(j-1) == '.':
+	 * dp[i+1][j+1] = dp[i+1][j-1] // * counts as empty
+	 * dp[i+1][j+1] = dp[i+1][j] // * counts as single a
+	 * dp[i+1][j+1] = dp[i][j+1] //* counts as multiple a !!!!
 	 * 
 	 * s: a b b
 	 * p: a b *
@@ -42,18 +44,17 @@ public class Leet010RegularExpressionMatching {
 		boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
 		// null to null
 		dp[0][0] = true;
-		// s==null p match null
 		/**
 		 * S: []
-		 * P: A * b * c
+		 * P: _ A * b * c
 		 * dp T F T F T F
 		 * at this moment * counts as empty since s is null
 		 */
-		for (int i = 0; i < p.length(); i++) {
+		for (int j = 1; j < p.length(); j++) {
 			// i-1
-			if (p.charAt(i) == '*' && dp[0][i - 1]) {
+			if (p.charAt(j) == '*' && dp[0][j - 1]) {
 				// i+1
-				dp[0][i + 1] = true;
+				dp[0][j + 1] = true;
 			}
 		}
 		for (int i = 0; i < s.length(); i++) {
@@ -68,7 +69,7 @@ public class Leet010RegularExpressionMatching {
 					if (p.charAt(j - 1) != s.charAt(i) && p.charAt(j - 1) != '.') {
 						dp[i + 1][j + 1] = dp[i + 1][j - 1];
 					} else {
-						dp[i + 1][j + 1] = (dp[i + 1][j] || dp[i][j + 1] || dp[i + 1][j - 1]);
+						dp[i + 1][j + 1] = (dp[i + 1][j - 1] || dp[i + 1][j] || dp[i][j + 1]);
 					}
 				}
 			}
