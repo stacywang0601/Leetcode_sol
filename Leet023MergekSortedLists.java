@@ -1,5 +1,8 @@
 package B07_20;
 
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 /**
  * Merge k sorted linked lists and return it as one sorted list. Analyze and
  * describe its complexity.
@@ -17,7 +20,7 @@ public class Leet023MergekSortedLists {
 	}
 
 	/**
-	 * Method2--Binary search
+	 * Method2--Binary search O(nlogk)
 	 * although s won't greater than e in this situation
 	 * we need add else + return
 	 * or it shows missing return
@@ -65,44 +68,31 @@ public class Leet023MergekSortedLists {
 		return dummy.next;
 	}
 
-	/**
-	 * Method3--没什么特别，就是merge也用了recursive
-	 * 把merge recursive重新又写了一遍
-	 */
-	public ListNode mergeKLists3(ListNode[] lists) {
-		return partition(lists, 0, lists.length - 1);
-	}
-
-	public ListNode partition3(ListNode[] lists, int s, int e) {
-		if (s == e) {
-			return lists[s];
-		}
-		int p = (s + e) / 2;
-		if (s < e) {
-			ListNode l1 = partition3(lists, s, p);
-			ListNode l2 = partition3(lists, p + 1, e);
-			return mergeTwoLists3(l1, l2);
-		} else {
+	/** priorityqueue O(nlogk) **/
+	public ListNode mergeKLists2(ListNode[] lists) {
+		if (lists == null || lists.length == 0)
 			return null;
-		}
+		PriorityQueue<ListNode> queue = new PriorityQueue<ListNode>(lists.length, new Comparator<ListNode>() {
+			@Override
+			public int compare(ListNode o1, ListNode o2) {
+				return o1.val - o2.val;
+			}
+		});
+		ListNode dummy = new ListNode(0);
+		ListNode cur = dummy;
+		for (ListNode node : lists)
+			if (node != null)
+				queue.add(node);
 
-	}
-
-	public ListNode mergeTwoLists3(ListNode l1, ListNode l2) {
-		if (l1 == null) {
-			return l2;
+		while (!queue.isEmpty()) {
+			ListNode node = queue.poll();
+			if (node.next != null) {
+				queue.add(node.next);
+			}
+			cur.next = node;
+			cur = cur.next;
 		}
-		if (l2 == null) {
-			return l1;
-		}
-		if (l1.val < l2.val) {
-			l1.next = mergeTwoLists3(l1.next, l2);
-			// 别忘了return
-			return l1;
-		} else {
-			l2.next = mergeTwoLists3(l1, l2.next);
-			return l2;
-		}
+		return dummy.next;
 	}
 
 }
