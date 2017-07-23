@@ -34,22 +34,53 @@ public class Leet375GuessNumberHigherorLowerII {
 	 * }
 	 */
 	public int getMoneyAmount(int n) {
+		if (n == 1)
+			return 0;
 		int[][] dp = new int[n + 1][n + 1];
 		for (int len = 1; len < n; len++) {
-			for (int from = 0; from + len <= n; from++) {
+			for (int from = 1; from <= n - len; from++) {
 				int to = from + len;
-				dp[from][to] = Integer.MAX_VALUE;
-				for (int k = from; k <= to; k++) {
-					dp[from][to] = Math.min(
-					            dp[from][to],
-					            k
-					                        + Math.max(k - 1 >= from ? dp[from][k - 1] : 0,
-					                                    k + 1 <= to ? dp[k + 1][to] : 0));
-
+				int ans = Integer.MAX_VALUE;
+				// ??? right half
+				for (int k = from + (len >> 1); k < to; k++) {
+					ans = Math.min(ans, k + Math.max(dp[from][k - 1], dp[k + 1][to]));
 				}
-
+				dp[from][to] = ans;
 			}
 		}
 		return dp[1][n];
+	}
+
+	public int getMoneyAmount2(int n) {
+		int[][] dp = new int[n + 1][n + 1];
+		return guessHelper(1, n, dp);
+	}
+
+	private int guessHelper(int start, int end, int[][] dp) {
+		if (start >= end) {
+			return 0;
+		}
+		// 3numbers--mid; 2numbers--start
+		if (end - start <= 2) {
+			return end - 1;
+		}
+
+		if (dp[start][end] > 0) {
+			return dp[start][end];
+		}
+
+		int mid = start + (end - start) / 2;
+		int minimax = Integer.MAX_VALUE;
+		// right half???
+		for (int i = mid; i < end; i++) {
+			int left = guessHelper(start, i - 1, dp);
+			int right = guessHelper(i + 1, end, dp);
+			minimax = Math.min(minimax, i + Math.max(left, right));
+			if (left >= right) {
+				break;
+			}
+		}
+		dp[start][end] = minimax;
+		return minimax;
 	}
 }
